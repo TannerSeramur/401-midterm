@@ -1,7 +1,7 @@
 'use strict';
 
 const express = require('express');
-const app = express;
+const app = express();
 
 app.set('view engine', 'ejs');
 app.set('views','./views');
@@ -27,7 +27,7 @@ app.use((err,req,res,next) => {
   res.statusMessage = 'server error';
   console.log(err, 'error here');
   res.render('error', {reqest: req, error: err});
-})
+});
 
 
 app.listen(3000, () => console.log('port is running on 3000'));

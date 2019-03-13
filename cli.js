@@ -6,6 +6,7 @@ const figlet = require('figlet');
 const inquirer  = require('./lib/inquirer');
 const fs = require('fs');
 const fse = require('fs-extra');
+const githubb = require('./lib/github');
 
 clear();
 console.log(chalk.white('-'));
@@ -22,11 +23,14 @@ console.log(
 
 const run = async () => {
   const credentials = await inquirer.cfQuickStartQuestions();
-  console.log(credentials);
+  
+  if(credentials.github === 'YES'){
+    githubb.createRepo(credentials.name, credentials.build);
+  }
+
   createDirectory(credentials.name);
   whichBuild(credentials);
   whichLicense(credentials.license);
-
 };
 
 run();
@@ -40,11 +44,14 @@ function createDirectory(dir){
 
 function whichBuild(choice){
   switch(choice.build){
-  case 'Express Server':
+  case 'express-server':
     copyFiles(`${__dirname}/templates/express-server`, `./${choice.name}`);
     break;
   case 'API-Server':
     copyFiles(`${__dirname}/templates/api-server`, `./${choice.name}`);
+    break;
+  case 'API-Server Package':
+    copyFiles(`${__dirname}/templates/api-server-with-package`, `./${choice.name}`);
     break;
   case 'React-App':
     copyFiles(`${__dirname}/templates/react-app`, `./${choice.name}`);
@@ -55,14 +62,19 @@ function whichBuild(choice){
   case 'Just the Config Files, Please':
     copyFiles(`${__dirname}/templates/config-files`, `./${choice.name}`);
   }
+  return `copied ${choice}`;
 }
 
 function whichLicense(choice){
   switch(choice){
-  case 'MIT':
-    console.log('using MIT License');
+  case 'MIT': 
+    copyFiles(`${__dirname}/templates/licenses/mit`, `./${choice.name}`);
+    break;
+  case 'Apache License 2.0': 
+    copyFiles(`${__dirname}/templates/licenses/apach20`, `./${choice.name}`);
     break;
   }
+  return `copied ${choice} license`;
 }
 
 function copyFiles(from, to){
@@ -71,4 +83,4 @@ function copyFiles(from, to){
   });
 }
 
-module.exports = {createDirectory, whichBuild};
+module.exports = {createDirectory, whichBuild, whichLicense};

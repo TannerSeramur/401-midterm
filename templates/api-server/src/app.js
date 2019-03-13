@@ -31,6 +31,7 @@ app.use(express.urlencoded({extended:true}));
 app.use('/docs', express.static('docs'));
 
 // Routes
+
 app.use(v1Router);
 
 // Catchalls
@@ -41,7 +42,7 @@ app.use(errorHandler);
  * Start Server on specified port
  * @param port {integer} (defaults to process.env.PORT)
  */
-let start = (port = process.env.PORT) => {
+let start = (port = process.env.PORT || 3000) => {
   app.listen(port, () => {
     console.log(`Server Up on ${port}`);
   });
